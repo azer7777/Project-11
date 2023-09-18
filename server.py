@@ -26,11 +26,12 @@ def index():
 
 @app.route('/showSummary', methods=['POST'])
 def showSummary():
+    clubs_list = clubs
     email = request.form.get('email')
     club = next((club for club in clubs if club['email'] == email), None)
     current_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     if club is not None:
-        return render_template('welcome.html', club=club, competitions=competitions, current_time=current_time)
+        return render_template('welcome.html', club=club, competitions=competitions, current_time=current_time, clubs_list=clubs_list)
     else:
         flash("Club not found. Please check the email address and try again.", "error")
         return redirect(url_for('index'))
@@ -66,10 +67,14 @@ def purchasePlaces():
         flash('Great-booking complete!')
         return render_template('welcome.html', club=club, competitions=competitions)
 
-    
-# TODO: Add route for points display
+
+@app.route('/clubsInfo')
+def clubs_info():
+    clubs_list = clubs
+    return render_template('clubs_info.html', clubs_list=clubs_list)
 
 
 @app.route('/logout')
 def logout():
     return redirect(url_for('index'))
+
