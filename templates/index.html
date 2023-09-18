@@ -12,7 +12,18 @@
         <input type="email" name="email" id=""/>
         <button type="submit">Enter</button>
     </form>
-    <br>
+    <div class="flash-messages">
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <ul class="flash">
+                    {% for message in messages %}
+                        <li>{{ message }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        {% endwith %}
+    </div>
+      <br>
     <a href="{{ url_for('clubs_info') }}">clubs information</a>
 </body>
 </html>

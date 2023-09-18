@@ -18,18 +18,24 @@
     Points available: {{club['points']}}
     <h3>Competitions:</h3>
     <ul>
-        {% for comp in competitions%}
+        {% for comp in competitions %}
         <li>
-            {{comp['name']}}<br />
-            Date: {{comp['date']}}</br>
-            Number of Places: {{comp['numberOfPlaces']}}
-            {%if comp['numberOfPlaces']|int >0%}
-            <a href="{{ url_for('book',competition=comp['name'],club=club['name']) }}">Book Places</a>
-            {%endif%}
+            {{ comp['name'] }}<br />
+            Date: {{ comp['date'] }}<br />
+            Number of Places: {{ comp['numberOfPlaces'] }}
+            {% if comp['numberOfPlaces']|int > 0 and comp['date'] > current_time %}
+            <a href="{{ url_for('book', competition=comp['name'], club=club['name']) }}">Book Places</a>
+            <p>Competition is valid.</p>
+            {% elif comp['date'] <= current_time %}
+            <p>Competition has expired.</p>
+            {% else %}
+            <p>No places available.</p>
+            {% endif %}
         </li>
         <hr />
         {% endfor %}
     </ul>
+    
     {%endwith%}
     <h3>Clubs information:</h3>
     <table>
