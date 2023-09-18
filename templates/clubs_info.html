@@ -1,0 +1,26 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clubs Information | GUDLFT Registration</title>
+</head>
+<body>
+    <h3>Clubs information:</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>Club Name</th>
+                <th>Points</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for club_entry in clubs_list %}
+            <tr>
+                <td>{{ club_entry['name'] }}</td>
+                <td>{{ club_entry['points'] }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>
