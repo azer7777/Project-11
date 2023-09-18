@@ -1,6 +1,6 @@
 import json
 from flask import Flask,render_template,request,redirect,flash,url_for
-
+from datetime import datetime
 
 def loadClubs():
     with open('clubs.json') as c:
@@ -28,9 +28,9 @@ def index():
 def showSummary():
     email = request.form.get('email')
     club = next((club for club in clubs if club['email'] == email), None)
-
+    current_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     if club is not None:
-        return render_template('welcome.html', club=club, competitions=competitions)
+        return render_template('welcome.html', club=club, competitions=competitions, current_time=current_time)
     else:
         flash("Club not found. Please check the email address and try again.", "error")
         return redirect(url_for('index'))
@@ -38,6 +38,7 @@ def showSummary():
 
 @app.route('/book/<competition>/<club>')
 def book(competition,club):
+
     foundClub = [c for c in clubs if c['name'] == club][0]
     foundCompetition = [c for c in competitions if c['name'] == competition][0]
     if foundClub and foundCompetition:
