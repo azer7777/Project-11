@@ -52,11 +52,7 @@ def purchasePlaces():
     elif placesRequired > current_places:
         flash("Not enough places available.")
     else:
-<<<<<<< HEAD
         competition['numberOfPlaces'] = current_places - placesRequired
-=======
-        competition['numberOfPlaces'] = int(competition['numberOfPlaces'])-placesRequired
->>>>>>> d180f008fc5a20ecc164425ee3dda1faf1da9e9f
         flash('Great-booking complete!')
     return render_template('welcome.html', club=club, competitions=competitions)
 
