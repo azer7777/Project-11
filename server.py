@@ -1,6 +1,6 @@
 import json
 from flask import Flask,render_template,request,redirect,flash,url_for
-
+from datetime import datetime
 
 def loadClubs():
     with open('clubs.json') as c:
@@ -24,14 +24,21 @@ clubs = loadClubs()
 def index():
     return render_template('index.html')
 
-@app.route('/showSummary',methods=['POST'])
+@app.route('/showSummary', methods=['POST'])
 def showSummary():
-    club = [club for club in clubs if club['email'] == request.form['email']][0]
-    return render_template('welcome.html',club=club,competitions=competitions)
+    email = request.form.get('email')
+    club = next((club for club in clubs if club['email'] == email), None)
+    current_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    if club is not None:
+        return render_template('welcome.html', club=club, competitions=competitions, current_time=current_time)
+    else:
+        flash("Club not found. Please check the email address and try again.", "error")
+        return redirect(url_for('index'))
 
 
 @app.route('/book/<competition>/<club>')
 def book(competition,club):
+
     foundClub = [c for c in clubs if c['name'] == club][0]
     foundCompetition = [c for c in competitions if c['name'] == competition][0]
     if foundClub and foundCompetition:
@@ -50,14 +57,21 @@ def purchasePlaces():
     if placesRequired > points:
         flash("You don't have enough points")
         return render_template('welcome.html', club=club, competitions=competitions)
+    elif placesRequired > 12:
+        flash("You can't book more then 12 places")
+        return render_template('welcome.html', club=club, competitions=competitions)
     else:
         competition['numberOfPlaces'] = int(competition['numberOfPlaces'])-placesRequired
         club['points'] = points - placesRequired
         flash('Great-booking complete!')
         return render_template('welcome.html', club=club, competitions=competitions)
 
+<<<<<<< HEAD
 
 
+=======
+    
+>>>>>>> 5cc82ba41670ec973daca7ad5b2da2dd2fd66d43
 # TODO: Add route for points display
 
 
