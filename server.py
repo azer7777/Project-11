@@ -2,6 +2,8 @@ import json
 from flask import Flask,render_template,request,redirect,flash,url_for
 from datetime import datetime
 
+booked_places = {}
+
 def loadClubs():
     with open('clubs.json') as c:
          listOfClubs = json.load(c)['clubs']
@@ -53,8 +55,10 @@ def book(competition,club):
 @app.route('/purchasePlaces',methods=['POST'])
 def purchasePlaces():
     clubs_list = clubs
+    competition_name = request.form['competition']
+    total_booked_places = booked_places.get(competition_name, 0)
     current_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    competition = [c for c in competitions if c['name'] == request.form['competition']][0]
+    competition = [c for c in competitions if c['name'] == competition_name][0]
     club = [c for c in clubs if c['name'] == request.form['club']][0]
     placesRequired = int(request.form['places'])
     current_places = int(competition['numberOfPlaces'])
@@ -62,7 +66,7 @@ def purchasePlaces():
     if placesRequired > points:
         flash("You don't have enough points")
         return render_template('welcome.html', club=club, competitions=competitions, current_time=current_time, clubs_list=clubs_list)
-    elif placesRequired > 12:
+    elif placesRequired > 12 or placesRequired + total_booked_places > 12:
         flash("You can't book more then 12 places")
         return render_template('welcome.html', club=club, competitions=competitions, current_time=current_time, clubs_list=clubs_list)
     elif placesRequired > current_places:
@@ -71,6 +75,7 @@ def purchasePlaces():
         competition['numberOfPlaces'] = current_places - placesRequired
         club['points'] = points - placesRequired
         flash('Great-booking complete!')
+        booked_places[competition_name] = total_booked_places + placesRequired
         return render_template('welcome.html', club=club, competitions=competitions, current_time=current_time, clubs_list=clubs_list)
 
 
