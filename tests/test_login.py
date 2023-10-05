@@ -1,6 +1,9 @@
+import pytest
 from server import app
 
-client = app.test_client()
+@pytest.fixture
+def client():
+    return app.test_client()
 
 def test_showSummary_valid_user(client):
     response = client.post('/showSummary', data={'email': 'john@simplylift.co'})
