@@ -2,6 +2,7 @@ from locust import HttpUser, task, between
 
 class MyUser(HttpUser):
     wait_time = between(1, 3)
+    host = "http://127.0.0.1:5000/"
 
     @task
     def index(self):
